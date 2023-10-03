@@ -16,5 +16,22 @@ class UserController {
       next(e);
     }
   }
+  public async findById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user = req.res.locals;
+      res.json(user);
+    } catch (e) {
+      next(e);
+    }
+  }
+  public async deleteById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const id = req.params.id;
+      await userService.deleteById(id);
+      res.status(204);
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 export const userController = new UserController();

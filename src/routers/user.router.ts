@@ -3,44 +3,24 @@ import mongoose from "mongoose";
 
 import { userController } from "../controllers/user.controller";
 import { ApiError } from "../errors/api.error";
+import { commonMiddleware } from "../middlewares/common.middleware";
+import { userMiddleware } from "../middlewares/user.middleware";
 import { User } from "../models/User.model";
-import { IUser } from "../types/user.type";
 import { UserValidator } from "../validators/user.validator";
 
 const router = Router();
 router.get("", userController.getAll);
-router.get(":id", async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { id } = req.params;
-    if (!mongoose.isValidObjectId(id)) {
-      throw new ApiError("Not valid ID", 400);
-    }
-    const user = await User.findById(id);
-    if (!user) {
-      throw new ApiError("User not found", 404);
-    }
-    res.json(user);
-  } catch (e) {
-    next(e);
-  }
-});
+router.get(
+  "/:id",
+  commonMiddleware.isIdValid,
+  userMiddleware.getByIdOrThrow,
+  userController.findById,
+);
 router.delete(
   ":id",
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { id } = req.params;
-      if (!mongoose.isObjectIdOrHexString(id)) {
-        throw new ApiError("Not valid ID", 400);
-      }
-      const user = await User.findByIdAndDelete(id);
-      if (!user) {
-        throw new ApiError("User not found", 404);
-      }
-      res.status(204);
-    } catch (e) {
-      next(e);
-    }
-  },
+  commonMiddleware.isIdValid,
+  userMiddleware.getByIdOrThrow,
+  userController.deleteById,
 );
 
 router.post("", async (req: Request, res: Response, next: NextFunction) => {
