@@ -1,27 +1,14 @@
 import { NextFunction, Request, Response, Router } from "express";
 import mongoose from "mongoose";
 
+import { userController } from "../controllers/user.controller";
 import { ApiError } from "../errors/api.error";
 import { User } from "../models/User.model";
 import { IUser } from "../types/user.type";
 import { UserValidator } from "../validators/user.validator";
 
 const router = Router();
-router.get(
-  "",
-  async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<Response<IUser[]>> => {
-    try {
-      const users = await User.find();
-      return res.json(users);
-    } catch (e) {
-      next(e);
-    }
-  },
-);
+router.get("", userController.getAll);
 router.get(":id", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
