@@ -17,7 +17,7 @@ class UserController {
       next(e);
     }
   }
-  public async createUser(
+  /*public async createUser(
     req: Request,
     res: Response,
     next: NextFunction,
@@ -29,7 +29,7 @@ class UserController {
     } catch (e) {
       next(e);
     }
-  }
+  }*/
   public async deleteUser(
     req: Request,
     res: Response,
