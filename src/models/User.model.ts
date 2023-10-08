@@ -12,7 +12,7 @@ const userSchema = new Schema(
       min: [1, "minimum age is 1"],
       max: [110, "maximum age is 110"],
     },
-    genders: {
+    gender: {
       type: String,
       enum: EGenders,
     },

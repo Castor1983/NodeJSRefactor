@@ -5,7 +5,7 @@ import { EGenders } from "../enums/gender.enum";
 
 export class UserValidator {
   static firstName = joi.string().min(2).max(50).trim();
-  static age = joi.number().min(1).max(110);
+  static age = joi.number().min(18).max(150);
   static gender = joi.valid(...Object.values(EGenders));
   static email = joi.string().regex(regexConstant.EMAIL).trim();
   static password = joi.string().regex(regexConstant.PASSWORD).trim();
