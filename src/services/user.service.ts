@@ -1,4 +1,3 @@
-import { ApiError } from "../errors/api.error";
 import { userRepository } from "../repositories/user.repository";
 import { IUser } from "../types/user.type";
 
