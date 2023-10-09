@@ -13,13 +13,9 @@ class AuthService {
     try {
       const hashedPassword = await passwordService.hash(dto.password);
       await userRepository.register({ ...dto, password: hashedPassword });
-      await emailService.sendMail(
-        "a0958086750@gmail.com",
-        EEmailAction.REGISTER,
-        {
-          name: "Kokos",
-        },
-      );
+      await emailService.sendMail(dto.email, EEmailAction.REGISTER, {
+        name: "Kokos",
+      });
     } catch (e) {
       throw new ApiError(e.message, e.status);
     }
