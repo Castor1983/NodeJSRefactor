@@ -8,6 +8,7 @@ class UserRepository {
     const users = await User.find();
     return users;
   }
+
   public async getOneByParams(params: FilterQuery<IUser>): Promise<IUser> {
     return await User.findOne(params);
   }
@@ -19,6 +20,7 @@ class UserRepository {
   public async createUser(dto: IUser): Promise<IUser> {
     return await User.create(dto);
   }
+
   public async register(dto: IUserCredentials): Promise<IUser> {
     return await User.create(dto);
   }
@@ -27,6 +29,10 @@ class UserRepository {
     return await User.findByIdAndUpdate(userId, dto, {
       returnDocument: "after",
     });
+  }
+
+  public async setStatus(userId: string, status: any): Promise<void> {
+    await User.updateOne({ _id: userId }, { $set: { status } });
   }
 
   public async deleteUser(userId: string): Promise<void> {

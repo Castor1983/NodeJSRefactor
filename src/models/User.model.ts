@@ -1,6 +1,7 @@
 import { model, Schema } from "mongoose";
 
 import { EGenders } from "../enums/gender.enum";
+import { EUserStatus } from "../enums/user-status.enum";
 import { IUser } from "../types/user.type";
 
 const userSchema = new Schema(
@@ -10,12 +11,18 @@ const userSchema = new Schema(
     },
     age: {
       type: Number,
-      min: [1, "minimum age is 1"],
-      max: [110, "maximum age is 110"],
+      min: [1, "Minimum age is 1"],
+      max: [199, "Maximum age is 199"],
     },
-    gender: {
+    genders: {
       type: String,
       enum: EGenders,
+    },
+    status: {
+      type: String,
+      enum: EUserStatus,
+      required: true,
+      default: EUserStatus.inactive,
     },
     email: {
       type: String,
