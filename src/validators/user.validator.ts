@@ -6,32 +6,39 @@ import { EGenders } from "../enums/gender.enum";
 export class UserValidator {
   static firstName = joi.string().min(2).max(50).trim();
   static age = joi.number().min(18).max(150);
-  static gender = joi.valid(...Object.values(EGenders));
+  static genders = joi.valid(...Object.values(EGenders));
   static email = joi.string().regex(regexConstant.EMAIL).trim();
   static password = joi.string().regex(regexConstant.PASSWORD).trim();
-
-  /*static create = joi.object({
-    name: this.firstName.required(),
-    age: this.age.required(),
-    gender: this.gender.required(),
-    email: this.email.required(),
-    password: this.password.required(),
-  });*/
 
   static update = joi.object({
     name: this.firstName,
     age: this.age,
-    gender: this.gender,
+    genders: this.genders,
   });
+
   static register = joi.object({
     name: this.firstName.required(),
     age: this.age.required(),
-    gender: this.gender.required(),
+    genders: this.genders.required(),
     email: this.email.required(),
     password: this.password.required(),
   });
+
   static login = joi.object({
     email: this.email.required(),
     password: this.password.required(),
+  });
+
+  static forgotPassword = joi.object({
+    email: this.email.required(),
+  });
+
+  static setForgotPassword = joi.object({
+    newPassword: this.password.required(),
+  });
+
+  static setNewPassword = joi.object({
+    password: this.password.required(),
+    newPassword: this.password.required(),
   });
 }

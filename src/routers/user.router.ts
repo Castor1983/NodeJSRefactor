@@ -8,16 +8,16 @@ import { UserValidator } from "../validators/user.validator";
 
 const router = Router();
 
-router.get("/", userController.getAll);
-/*router.post(
+router.get(
   "/",
-  commonMiddleware.isBodyValid(UserValidator.create),
-  userController.createUser,
-);*/
+  commonMiddleware.isQueryValid(10, "createdAt"),
+  userController.getAll,
+);
+
+router.get("/me", authMiddleware.checkAccessToken, userController.getMe);
 
 router.get(
   "/:userId",
-  authMiddleware.checkAccessToken,
   commonMiddleware.isIdValid("userId"),
   userMiddleware.getByIdOrThrow,
   userController.getById,

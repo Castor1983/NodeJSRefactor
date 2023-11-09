@@ -1,30 +1,58 @@
+import { ApiError } from "../errors/api.error";
+import { User } from "../models/User.model";
 import { userRepository } from "../repositories/user.repository";
+import { IPaginationResponse, IQuery } from "../types/pagination.type";
 import { IUser } from "../types/user.type";
 
 class UserService {
-  public async getAll(): Promise<IUser[]> {
-    return await userRepository.getAll();
+  public async getAllWithPagination(
+    query: IQuery,
+  ): Promise<IPaginationResponse<IUser>> {
+    try {
+      const [users, itemsFound] = await userRepository.getMany(query);
+
+      const user = await User.findOne({
+        email: "julianne.oconner@kory.org",
+      });
+
+      // const userNameWithAge = user.nameWithAge(); // name + age
+
+      // const user = await User.findByEmail("julianne.oconner@kory.org");
+      // console.log(user);
+
+      return {
+        page: +query.page,
+        limit: +query.limit,
+        itemsFound,
+        data: users,
+      };
+    } catch (e) {
+      throw new ApiError(e.message, e.status);
+    }
   }
 
-  /* public async createUser(dto: IUser): Promise<IUser> {
-    await this.isEmailUniq(dto.email);
-    return await userRepository.createUser(dto);
-  }*/
-
-  public async updateUser(userId: string, dto: Partial<IUser>): Promise<IUser> {
-    return await userRepository.updateUser(userId, dto);
+  public async updateUser(
+    manageUserId: string,
+    dto: Partial<IUser>,
+    userId: string,
+  ): Promise<IUser> {
+    this.checkAbilityToManage(userId, manageUserId);
+    return await userRepository.updateOneById(manageUserId, dto);
   }
 
   public async deleteUser(userId: string): Promise<void> {
     await userRepository.deleteUser(userId);
   }
 
-  /*private async isEmailUniq(email: string): Promise<void> {
-    const user = await userRepository.getOneByParams({ email });
-    if (user) {
-      throw new ApiError("Email already exist", 409);
+  public async getMe(userId: string): Promise<IUser> {
+    return await userRepository.findById(userId);
+  }
+
+  private checkAbilityToManage(userId: string, manageUserId: string): void {
+    if (userId !== manageUserId) {
+      throw new ApiError("U can not manage this user", 403);
     }
-  }*/
+  }
 }
 
 export const userService = new UserService();
